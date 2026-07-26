@@ -13,6 +13,8 @@
  */
 import type { PillarContent, Project, ProjectCategory } from '../../data/pillars';
 import contentJson from '../../data/pillars.content.json';
+import { ENERGY_PILLAR_SLUG } from '../../data/energy';
+import { getEnergyPillar } from './energy-repo';
 
 const mockPillars = (contentJson as { pillars: PillarContent[] }).pillars;
 
@@ -99,8 +101,13 @@ async function fetchFromSupabase(): Promise<PillarContent[]> {
   });
 }
 
-/** Returns all pillars with their nested projects. Never throws — falls back to mock. */
-export async function getAllPillars(): Promise<PillarContent[]> {
+/**
+ * The three legacy pillars, from the `pillars`/`projects` tables.
+ *
+ * Their content is still the bundled placeholder set; replacing it with
+ * source-traced data (as the energy pillar already is) is the open work item.
+ */
+async function getLegacyPillars(): Promise<PillarContent[]> {
   if (!isDbConfigured) return mockPillars;
 
   if (cache && Date.now() - cache.at < CACHE_TTL_MS) return cache.data;
@@ -116,6 +123,19 @@ export async function getAllPillars(): Promise<PillarContent[]> {
     console.error('[pillars-repo] Supabase load failed, using mock content:', err);
     return mockPillars;
   }
+}
+
+/**
+ * Returns all pillars with their nested projects. Never throws.
+ *
+ * The energy pillar is composed from its own relational tables rather than
+ * from `projects`, so it is appended here instead of coming out of the same
+ * query. Both sources are adapted to the identical `PillarContent` shape, so
+ * every consumer downstream — API, loaders, pages — stays unaware of the split.
+ */
+export async function getAllPillars(): Promise<PillarContent[]> {
+  const [legacy, energy] = await Promise.all([getLegacyPillars(), getEnergyPillar()]);
+  return [...legacy.filter((p) => p.slug !== ENERGY_PILLAR_SLUG), energy];
 }
 
 /** Returns a single pillar by slug, or null if it does not exist. */

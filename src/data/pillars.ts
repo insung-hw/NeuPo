@@ -1,5 +1,8 @@
-import { Users, Landmark, TrendingUp, type LucideIcon } from 'lucide-react';
+import { Users, Landmark, TrendingUp, Zap, type LucideIcon } from 'lucide-react';
 import contentJson from './pillars.content.json';
+// Type-only: erased at compile time, so this does not create a runtime import
+// cycle with energy.ts (which imports the Project/PillarContent types back).
+import type { PolicyEvidence } from './energy';
 
 /**
  * Data model
@@ -32,6 +35,12 @@ export interface Project {
   /** Canonical URL for the source. Optional so weak links can be filled in later. */
   sourceUrl?: string;
   category: ProjectCategory;
+  /**
+   * Source-traced detail for cards backed by the relational policy dataset
+   * (currently the energy pillar). Absent on the legacy mock pillars, whose
+   * flat rows have nothing richer to carry. See `data/energy.ts`.
+   */
+  evidence?: PolicyEvidence;
 }
 
 /** A pillar's serializable content — the shape returned by the API / loaders. */
@@ -64,6 +73,7 @@ export const pillarMeta: Record<string, PillarMeta> = {
   social: { label: 'Social', accent: '#ffef63', icon: Users },
   political: { label: 'Political', accent: '#ffe717', icon: Landmark },
   economic: { label: 'Economic', accent: '#fff7b0', icon: TrendingUp },
+  energy: { label: 'Energy', accent: '#7ee787', icon: Zap },
 };
 
 /**

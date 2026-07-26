@@ -41,6 +41,26 @@
 
 ---
 
+## 3-1. Energy 정책 데이터 올리기 (`/energy` 페이지용)
+
+Energy pillar는 나머지 세 pillar와 **다른 테이블 4개**를 씁니다. 정책 하나가 legal /
+implementation / litigation 3개 상태축을 갖고, 각 상태가 공식 문서로 뒷받침되는 구조라
+`projects` 테이블의 납작한 한 줄에는 담기지 않기 때문입니다.
+
+1. **SQL Editor** → **New query** → `supabase/schema.energy.sql` 전체 붙여넣고 **Run**
+   → `policies`, `policy_documents`, `policy_document_links`, `policy_status_assessments`
+   4개 테이블 생성 + 공개 읽기 정책(RLS).
+2. **New query** → `supabase/seed.energy.sql` 전체 붙여넣고 **Run**
+   → 8 policies / 38 documents / 41 links / 24 assessments 적재.
+3. **Table Editor** → `policies` 에 8행이 있으면 완료.
+
+기존 `pillars` / `projects` 테이블은 **건드리지 않습니다** — social·political·economic은
+그대로 남습니다. 두 SQL 모두 재실행해도 안전합니다(먼저 비우고 다시 넣음).
+
+데이터 출처와 검증 기록은 저장소 밖 `us_renewable_policy_data_research_log.md` 를 참고하세요.
+
+---
+
 ## 4. 접속 키 복사해서 사이트에 알려주기
 
 1. Supabase 왼쪽 하단 **Project Settings**(톱니바퀴) → **API** 메뉴.
@@ -123,6 +143,17 @@ node supabase/generate-seed.mjs
 ```
 
 > JSON을 고치면 (DB 미설정 시의) 폴백 데이터도 같이 갱신되므로, 원본을 JSON에 유지하는 것을 권장합니다.
+
+**Energy 데이터를 갱신할 때**는 사슬이 한 칸 더 깁니다. 리서치 워크북(엑셀)이 최상위
+원본이고, 거기서 JSON을, JSON에서 seed SQL을 만듭니다:
+
+```
+python supabase/xlsx-to-energy-json.py ../us_renewable_policy_data.xlsx   # xlsx -> JSON
+node supabase/generate-energy-seed.mjs                                    # JSON -> seed.energy.sql
+```
+
+나온 `supabase/seed.energy.sql`을 SQL Editor에 붙여 Run 하면 반영됩니다.
+(`xlsx-to-energy-json.py`는 `openpyxl`이 필요합니다: `pip install openpyxl`)
 
 ---
 

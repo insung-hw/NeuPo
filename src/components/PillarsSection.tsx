@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Users, Landmark, TrendingUp, ArrowRight } from 'lucide-react';
+import { Users, Landmark, TrendingUp, Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const pillars = [
@@ -30,6 +30,15 @@ const pillars = [
     accent: '#fff7b0',
     bg: '#022e28',
   },
+  {
+    icon: Zap,
+    label: 'Energy',
+    path: '/energy',
+    description: 'Tracking the legal, implementation, and litigation status of federal renewable-energy policy — every statement traced to an official source.',
+    subcategories: ['Policies', 'Official sources'],
+    accent: '#7ee787',
+    bg: '#022e28',
+  },
 ];
 
 export default function PillarsSection() {
@@ -50,14 +59,14 @@ export default function PillarsSection() {
             className="text-3xl md:text-4xl font-bold mb-4"
             style={{ fontFamily: 'var(--font-heading)', color: '#f5f5f5' }}
           >
-            Three Pillars of National Strategy
+            Four Pillars of National Strategy
           </h2>
           <p className="max-w-xl mx-auto" style={{ color: '#a8c4c0' }}>
-            Every government initiative is categorized across three strategic domains, each with measurable objectives, defined policies, and tracked projects.
+            Every government initiative is categorized across four strategic domains, each with measurable objectives, defined policies, and tracked projects.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {pillars.map((pillar, i) => {
             const Icon = pillar.icon;
             return (

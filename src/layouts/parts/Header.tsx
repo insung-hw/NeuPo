@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown, Users, Landmark, TrendingUp } from 'lucide-react';
+import { Menu, X, ChevronDown, Users, Landmark, TrendingUp, Zap } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 const pillars = [
@@ -35,6 +35,16 @@ const pillars = [
       { label: 'Policies', path: '/economic' },
       { label: 'Projects', path: '/economic' },
     ],
+  },
+  {
+    // The energy dataset tracks policies only — it records no agency
+    // objectives and no funded projects, so those two entries are omitted
+    // rather than linking to empty tabs.
+    label: 'Energy',
+    icon: Zap,
+    path: '/energy',
+    color: '#7ee787',
+    subcategories: [{ label: 'Policies', path: '/energy' }],
   },
 ];
 

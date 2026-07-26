@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ExternalLink, ShieldCheck } from 'lucide-react';
 import DonutChart from './DonutChart';
 import { type PillarContent, type Project, statusColors, pillarMeta } from '@/data/pillars';
+import { statusLabel, type PolicyEvidence } from '@/data/energy';
 
 const tabs = ['All', 'Objectives', 'Policies', 'Projects'] as const;
 type Tab = (typeof tabs)[number];
@@ -59,6 +60,193 @@ function StatusBadge({ status }: { status: Project['status'] }) {
   );
 }
 
+/**
+ * A few research fields hold several statements joined with " | ". Rendering
+ * them as one run-on paragraph buries the individual requirements, so split
+ * them back into list items.
+ */
+function splitStatements(text: string): string[] {
+  return text
+    .split('|')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+const axisLabels: Record<string, string> = {
+  legal_status: 'Legal',
+  implementation_status: 'Implementation',
+  litigation_status: 'Litigation',
+};
+
+/** The three status axes, shown instead of a single verdict. */
+function StatusAxes({ evidence, accent }: { evidence: PolicyEvidence; accent: string }) {
+  const axes = [
+    ['legal_status', evidence.legalStatus],
+    ['implementation_status', evidence.implementationStatus],
+    ['litigation_status', evidence.litigationStatus],
+  ] as const;
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {axes.map(([axis, value]) => (
+        <div
+          key={axis}
+          className="rounded-lg px-2.5 py-2"
+          style={{ background: '#013e37', border: '1px solid #035048' }}
+        >
+          <div className="text-[10px] uppercase tracking-wider mb-0.5" style={{ color: '#a8c4c0' }}>
+            {axisLabels[axis]}
+          </div>
+          <div className="text-xs font-semibold leading-tight" style={{ color: accent }}>
+            {statusLabel(value)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Collapsed evidence panel: why the status reads the way it does, and the
+ * official documents it rests on. Collapsed by default so the grid stays
+ * scannable — the card is a summary, this is the audit trail.
+ */
+function EvidencePanel({ evidence, accent }: { evidence: PolicyEvidence; accent: string }) {
+  const [open, setOpen] = useState(false);
+  const controlling = evidence.documents.filter((d) => d.isControlling).length;
+
+  return (
+    <div className="border-t pt-3" style={{ borderColor: '#035048' }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center justify-between w-full text-xs font-medium"
+        style={{ color: accent }}
+        aria-expanded={open}
+      >
+        <span className="flex items-center gap-1.5">
+          <ShieldCheck size={12} />
+          {evidence.documents.length} official {evidence.documents.length === 1 ? 'source' : 'sources'}
+          {controlling > 0 && (
+            <span style={{ color: '#a8c4c0' }}>· {controlling} controlling</span>
+          )}
+        </span>
+        <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="mt-3 flex flex-col gap-4">
+          <div>
+            <h4 className="text-xs font-semibold mb-1.5" style={{ color: '#f5f5f5' }}>
+              Why this status
+            </h4>
+            <p className="text-xs leading-relaxed" style={{ color: '#a8c4c0' }}>
+              {evidence.statusExplanation}
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold mb-1.5" style={{ color: '#f5f5f5' }}>
+              What applies now
+            </h4>
+            <ul className="flex flex-col gap-1">
+              {splitStatements(evidence.effectiveRequirements).map((item) => (
+                <li key={item} className="text-xs leading-relaxed pl-3 relative" style={{ color: '#a8c4c0' }}>
+                  <span className="absolute left-0" style={{ color: accent }}>·</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {evidence.inactiveOrLimitedScope && (
+            <div>
+              <h4 className="text-xs font-semibold mb-1.5" style={{ color: '#f5f5f5' }}>
+                Limits and exclusions
+              </h4>
+              <ul className="flex flex-col gap-1">
+                {splitStatements(evidence.inactiveOrLimitedScope).map((item) => (
+                  <li key={item} className="text-xs leading-relaxed pl-3 relative" style={{ color: '#a8c4c0' }}>
+                    <span className="absolute left-0" style={{ color: accent }}>·</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {evidence.assessments.length > 0 && (
+            <div>
+              <h4 className="text-xs font-semibold mb-1.5" style={{ color: '#f5f5f5' }}>
+                Assessments
+              </h4>
+              <div className="flex flex-col gap-2">
+                {evidence.assessments.map((a) => (
+                  <div key={`${a.type}-${a.value}`} className="text-xs leading-relaxed" style={{ color: '#a8c4c0' }}>
+                    <span className="font-semibold" style={{ color: accent }}>
+                      {axisLabels[a.type] ?? a.type}: {statusLabel(a.value)}
+                    </span>
+                    {/* Flagged explicitly: an inferred value is the analyst's
+                        reading, not a direct statement in the cited document. */}
+                    {a.analystInference && (
+                      <span
+                        className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] align-middle"
+                        style={{ background: '#03504840', color: '#a8c4c0' }}
+                      >
+                        analyst inference
+                      </span>
+                    )}
+                    <p className="mt-0.5">{a.summary}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div>
+            <h4 className="text-xs font-semibold mb-1.5" style={{ color: '#f5f5f5' }}>
+              Official sources
+            </h4>
+            <ul className="flex flex-col gap-2">
+              {evidence.documents.map((doc) => (
+                <li key={doc.documentId} className="text-xs leading-relaxed">
+                  <a
+                    href={doc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-start gap-1 hover:underline"
+                    style={{ color: accent }}
+                  >
+                    <ExternalLink size={10} className="mt-0.5 shrink-0" />
+                    <span>{doc.officialIdentifier}</span>
+                  </a>
+                  <div style={{ color: '#a8c4c0' }}>
+                    {doc.title}
+                  </div>
+                  <div style={{ color: '#7c9c98' }}>
+                    {doc.issuingBody} · {doc.relationshipType}
+                    {doc.isControlling && ' · controlling'}
+                    {doc.effect !== 'effective' && ` · ${statusLabel(doc.effect)}`}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {evidence.nextMilestone && (
+            <div>
+              <h4 className="text-xs font-semibold mb-1.5" style={{ color: '#f5f5f5' }}>
+                Next milestone
+              </h4>
+              <p className="text-xs leading-relaxed" style={{ color: '#a8c4c0' }}>
+                {evidence.nextMilestone}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ProjectCard({ project, accent }: { project: Project; accent: string }) {
   return (
     <motion.div
@@ -94,10 +282,23 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
       {/* Description */}
       <p className="text-sm leading-relaxed" style={{ color: '#a8c4c0' }}>{project.description}</p>
 
+      {/* Source-traced cards carry three independent status axes; the single
+          badge above is only a summary of them. */}
+      {project.evidence && <StatusAxes evidence={project.evidence} accent={accent} />}
+
       {/* Progress bar */}
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-xs" style={{ color: '#a8c4c0' }}>Progress</span>
+          <span
+            className="text-xs"
+            style={{ color: '#a8c4c0' }}
+            // The research dataset has no percent-complete field; for those
+            // cards this bar is derived from the status axes, and the label
+            // says so rather than implying a measured figure.
+            title={project.evidence ? 'Derived from the legal, implementation, and litigation status' : undefined}
+          >
+            {project.evidence ? 'Status index' : 'Progress'}
+          </span>
           <span className="text-xs font-semibold" style={{ color: accent }}>
             {project.progress}%
           </span>
@@ -114,23 +315,32 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         </div>
       </div>
 
-      {/* Budget + Source */}
-      <div className="flex items-center justify-between pt-1 border-t border-[#035048]">
-        <div>
-          <span className="text-xs" style={{ color: '#a8c4c0' }}>Budget: </span>
-          <span className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{project.budget}</span>
-        </div>
+      {/* Footer: budget + source for the flat rows, currency + confidence for
+          the source-traced ones (which have no budget figure to show). */}
+      <div className="flex items-center justify-between gap-3 pt-1 border-t border-[#035048]">
+        {project.evidence ? (
+          <div className="text-xs" style={{ color: '#a8c4c0' }}>
+            As of {project.evidence.statusAsOf} · {statusLabel(project.evidence.confidence)} confidence
+          </div>
+        ) : (
+          <div>
+            <span className="text-xs" style={{ color: '#a8c4c0' }}>Budget: </span>
+            <span className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{project.budget}</span>
+          </div>
+        )}
         <a
           href={getSourceUrl(project)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 text-xs transition-colors hover:underline"
+          className="flex items-center gap-1 text-xs transition-colors hover:underline shrink-0"
           style={{ color: accent }}
         >
           <ExternalLink size={11} />
           {project.source}
         </a>
       </div>
+
+      {project.evidence && <EvidencePanel evidence={project.evidence} accent={accent} />}
     </motion.div>
   );
 }
@@ -158,9 +368,25 @@ export default function CategoryPage({ pillar }: CategoryPageProps) {
       ? allItems
       : allItems.filter((p) => p.category === activeTab);
 
-  const totalProgress = Math.round(
-    allItems.reduce((sum, p) => sum + p.progress, 0) / allItems.length
+  const totalProgress = allItems.length
+    ? Math.round(allItems.reduce((sum, p) => sum + p.progress, 0) / allItems.length)
+    : 0;
+
+  // A pillar backed by the research dataset states a status, not a percentage
+  // of work completed — the headline and the donut label say so.
+  const isSourceTraced = allItems.some((p) => p.evidence);
+  const heading = isSourceTraced ? `${pillar.label} Policy Status` : `${pillar.label} Strategy`;
+  const progressLabel = isSourceTraced ? 'avg status index' : 'avg progress';
+  // Buckets the dataset does not populate are hidden rather than shown as
+  // empty tabs and zero counters.
+  const visibleTabs = tabs.filter(
+    (tab) => tab === 'All' || allItems.some((p) => p.category === tab),
   );
+  const visibleStats = [
+    { label: 'Objectives', count: pillar.objectives.length },
+    { label: 'Policies', count: pillar.policies.length },
+    { label: 'Projects', count: pillar.projects.length },
+  ].filter((stat) => stat.count > 0);
 
   return (
     <>
@@ -196,7 +422,7 @@ export default function CategoryPage({ pillar }: CategoryPageProps) {
                   className="text-3xl md:text-5xl font-bold mb-4"
                   style={{ fontFamily: 'var(--font-heading)', color: '#f5f5f5' }}
                 >
-                  {pillar.label} Strategy
+                  {heading}
                 </h1>
                 <p className="text-lg max-w-xl" style={{ color: '#a8c4c0' }}>{pillar.description}</p>
               </div>
@@ -212,16 +438,12 @@ export default function CategoryPage({ pillar }: CategoryPageProps) {
                     >
                       {totalProgress}%
                     </span>
-                    <span className="text-xs" style={{ color: '#a8c4c0' }}>avg progress</span>
+                    <span className="text-xs" style={{ color: '#a8c4c0' }}>{progressLabel}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  {[
-                    { label: 'Objectives', count: pillar.objectives.length },
-                    { label: 'Policies', count: pillar.policies.length },
-                    { label: 'Projects', count: pillar.projects.length },
-                  ].map((stat) => (
+                  {visibleStats.map((stat) => (
                     <div key={stat.label}>
                       <div
                         className="text-xl font-bold"
@@ -243,7 +465,7 @@ export default function CategoryPage({ pillar }: CategoryPageProps) {
           <div className="container mx-auto px-4">
             {/* Tabs */}
             <div className="flex flex-wrap gap-2 mb-10">
-              {tabs.map((tab) => {
+              {visibleTabs.map((tab) => {
                 const isActive = activeTab === tab;
                 return (
                   <button

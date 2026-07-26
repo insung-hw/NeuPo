@@ -4,6 +4,7 @@ import HomePage from './pages/index';
 import SocialPage from './pages/social';
 import PoliticalPage from './pages/political';
 import EconomicPage from './pages/economic';
+import EnergyPage from './pages/energy';
 import RegisterPage from './pages/register';
 import { loadPillarOrThrow } from '@/lib/pillars-loader';
 // Eager import so renderToString doesn't hit a Suspense boundary on 404 routes
@@ -37,6 +38,11 @@ export const routes: RouteObject[] = [
     loader: () => loadPillarOrThrow('economic'),
   },
   {
+    path: '/energy',
+    element: <EnergyPage />,
+    loader: () => loadPillarOrThrow('energy'),
+  },
+  {
     path: '/register',
     element: <RegisterPage />,
   },
@@ -52,6 +58,6 @@ export const routes: RouteObject[] = [
 ];
 
 // Types for type-safe navigation
-export type Path = '/' | '/social' | '/political' | '/economic';
+export type Path = '/' | '/social' | '/political' | '/economic' | '/energy';
 
 export type Params = Record<string, string | undefined>;
