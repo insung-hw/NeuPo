@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+.worktrees/
 
 # Env / secrets — never commit real keys
 .env
