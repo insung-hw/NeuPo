@@ -34,7 +34,7 @@ export function renderPolicySeed(dataset, areas) {
     'truncate table public.policy_status_assessments, public.policy_document_links,',
   );
   lines.push(
-    '  public.policy_documents, public.policies, public.policy_areas restart identity cascade;',
+    '  public.policy_documents, public.policies, public.policy_areas restart identity;',
   );
   lines.push('');
 

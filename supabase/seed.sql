@@ -4,7 +4,7 @@
 -- Dataset status as of 2026-07-26.
 
 truncate table public.policy_status_assessments, public.policy_document_links,
-  public.policy_documents, public.policies, public.policy_areas restart identity cascade;
+  public.policy_documents, public.policies, public.policy_areas restart identity;
 
 insert into public.policy_areas (slug, label, description, sort_order) values
   ('tax-incentives', 'Tax & Incentives', 'Federal clean-energy credits and location or sourcing bonuses.', 0),

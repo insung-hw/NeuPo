@@ -37,6 +37,29 @@ set source_policy_area = coalesce(source_policy_area, policy_area),
 
 do $$
 begin
+  if exists (
+    with expected_mapping (policy_id, source_policy_area, policy_area_slug) as (
+      values
+        ('POL-001', 'Federal clean-energy tax credits', 'tax-incentives'),
+        ('POL-002', 'Federal clean-energy tax-credit bonus', 'tax-incentives'),
+        ('POL-003', 'Federal clean-energy tax-credit bonus', 'tax-incentives'),
+        ('POL-004', 'Solar trade remedies and project supply', 'trade-supply-chain'),
+        ('POL-005', 'generator_interconnection', 'grid-transmission'),
+        ('POL-006', 'regional_transmission_planning', 'grid-transmission'),
+        ('POL-007', 'permitting', 'permitting-siting'),
+        ('POL-008', 'offshore_wind', 'offshore-wind')
+    )
+    select 1
+    from public.policies p
+    full outer join expected_mapping expected on expected.policy_id = p.policy_id
+    where p.policy_id is null
+       or expected.policy_id is null
+       or p.policy_area is distinct from expected.source_policy_area
+       or p.source_policy_area is distinct from expected.source_policy_area
+       or p.policy_area_slug is distinct from expected.policy_area_slug
+  ) then
+    raise exception 'Policy Area migration aborted: policy mapping does not exactly match the expected dataset';
+  end if;
   if exists (select 1 from public.policies where source_policy_area is null or policy_area_slug is null) then
     raise exception 'Policy Area migration aborted: at least one policy is unmapped';
   end if;

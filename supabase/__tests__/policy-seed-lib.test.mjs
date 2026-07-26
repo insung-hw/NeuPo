@@ -2,6 +2,18 @@ import { describe, expect, it } from 'vitest';
 import { renderPolicySeed } from '../policy-seed-lib.mjs';
 
 describe('renderPolicySeed', () => {
+  it('does not cascade truncation beyond the explicitly listed policy tables', () => {
+    const sql = renderPolicySeed({
+      meta: { statusAsOf: '2026-07-26' },
+      policies: [], documents: [], links: [], assessments: [],
+    }, []);
+
+    expect(sql).toContain(
+      'public.policy_documents, public.policies, public.policy_areas restart identity;',
+    );
+    expect(sql.toLowerCase()).not.toContain('cascade');
+  });
+
   it('writes canonical and source policy areas and escapes apostrophes', () => {
     const sql = renderPolicySeed({
       meta: { statusAsOf: '2026-07-26' },
