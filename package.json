@@ -12,6 +12,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "data:import": "python supabase/xlsx-to-policies-json.py ../us_renewable_policy_data.xlsx",
+    "data:seed": "node supabase/generate-policy-seed.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
