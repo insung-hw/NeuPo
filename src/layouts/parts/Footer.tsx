@@ -1,13 +1,26 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { submitSignup } from '@/lib/api-client';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError('');
+    try {
+      await submitSignup(email, 'footer');
+      setSubmitted(true);
+      setEmail('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   const quickLinks = [
@@ -27,7 +40,7 @@ export default function Footer() {
             <div className="flex items-center gap-2 mb-3">
               <div className="rounded-lg overflow-hidden" style={{ background: '#fff', padding: '3px' }}>
                 <img
-                  src="/assets/screenshot-2026-07-25T14-29-40.jpg"
+                  src="/assets/logo.jpeg"
                   alt="NeuPo logo"
                   className="h-7 w-7 object-contain block"
                 />
@@ -83,18 +96,21 @@ export default function Footer() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
-                  className="w-full px-3 py-2 rounded-md text-sm border focus:outline-none transition-colors"
+                  disabled={loading}
+                  className="w-full px-3 py-2 rounded-md text-sm border focus:outline-none transition-colors disabled:opacity-60"
                   style={{ background: '#013e37', borderColor: '#035048', color: '#f5f5f5' }}
                   onFocus={(e) => (e.target.style.borderColor = '#ffef63')}
                   onBlur={(e) => (e.target.style.borderColor = '#035048')}
                 />
                 <button
                   type="submit"
-                  className="w-full px-4 py-2 rounded-md text-sm font-semibold transition-all hover:opacity-90"
+                  disabled={loading}
+                  className="w-full px-4 py-2 rounded-md text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60"
                   style={{ background: '#ffef63', color: '#013e37' }}
                 >
-                  Subscribe
+                  {loading ? 'Subscribing…' : 'Subscribe'}
                 </button>
+                {error && <span className="text-xs" style={{ color: '#fca5a5' }}>{error}</span>}
               </form>
             )}
           </div>

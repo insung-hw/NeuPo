@@ -8,6 +8,7 @@ import contact_formName_post_0 from "./api/contact/[formName]/POST";
 import health_get_1 from "./api/health/GET";
 import pillars_get_2 from "./api/pillars/GET";
 import pillars_slug_get_3 from "./api/pillars/[slug]/GET";
+import signup_post_4 from "./api/signup/POST";
 // </api-imports>
 import { seoRoutes } from "../lib/seo-routes";
 import {
@@ -92,6 +93,7 @@ app.post("/api/contact/:formName", contact_formName_post_0);
 app.get("/api/health", health_get_1);
 app.get("/api/pillars", pillars_get_2);
 app.get("/api/pillars/:slug", pillars_slug_get_3);
+app.post("/api/signup", signup_post_4);
 // </api-registrations>
 
 // Error middleware must be registered AFTER the routes it protects; Express

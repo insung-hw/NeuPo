@@ -4,6 +4,7 @@ import HomePage from './pages/index';
 import SocialPage from './pages/social';
 import PoliticalPage from './pages/political';
 import EconomicPage from './pages/economic';
+import RegisterPage from './pages/register';
 import { loadPillarOrThrow } from '@/lib/pillars-loader';
 // Eager import so renderToString doesn't hit a Suspense boundary on 404 routes
 // and abort to client rendering. The prod 404 page is tiny; the dev-tools
@@ -34,6 +35,10 @@ export const routes: RouteObject[] = [
     path: '/economic',
     element: <EconomicPage />,
     loader: () => loadPillarOrThrow('economic'),
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
   {
     // Military was removed — redirect to home

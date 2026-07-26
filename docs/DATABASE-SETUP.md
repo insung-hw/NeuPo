@@ -126,6 +126,18 @@ node supabase/generate-seed.mjs
 
 ---
 
+## 8. 대기자 이메일 수집 (waitlist)
+
+메인 히어로, 푸터 뉴스레터, `/register` 페이지에서 받은 이메일을 저장하는 기능입니다.
+
+**한 번만 설정**: Supabase → **SQL Editor** → **New query**에 `supabase/signups.sql` 내용을 붙여넣고 **Run**. (`signups` 테이블 생성 + 익명 저장 허용/조회 차단 정책)
+
+**동작 방식**: 방문자가 이메일을 넣으면 서버의 `/api/signup`이 Supabase에 저장합니다. Render에는 **추가 설정이 필요 없어요** — 이미 넣어둔 `SUPABASE_URL` / `SUPABASE_ANON_KEY`를 그대로 씁니다.
+
+**모인 이메일 보기**: Supabase → **Table Editor** → `signups` 테이블. `source` 컬럼으로 어디서 들어왔는지(hero / footer / register) 구분됩니다. 보안을 위해 이 목록은 공개 API로는 못 읽고 대시보드에서만 보입니다.
+
+> 로그인(계정) 기능은 아직 없습니다 — 지금은 이메일 수집만. 나중에 실제 로그인이 필요하면 Supabase Auth로 확장할 수 있어요.
+
 ## 문제 해결
 
 - **카테고리 페이지가 비어 보임 / 옛날 데이터** → 환경변수(`SUPABASE_URL`, `SUPABASE_ANON_KEY`)가 제대로 들어갔는지, seed.sql을 Run 했는지 확인. 값이 틀리거나 DB 오류면 자동으로 JSON 폴백으로 뜹니다(사이트가 깨지진 않음).

@@ -1,0 +1,53 @@
+import type { Request, Response } from "express";
+
+// POST /api/signup — stores a waitlist / newsletter email in Supabase.
+// Body: { email: string, source?: string }
+
+const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/+$/, "");
+const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
+
+// Pragmatic email shape check (real validation is delivery, not regex).
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default async function handler(req: Request, res: Response): Promise<void> {
+	const email = String(req.body?.email ?? "").trim().toLowerCase();
+	const source = String(req.body?.source ?? "web").slice(0, 50);
+
+	if (!EMAIL_RE.test(email) || email.length > 254) {
+		res.status(400).json({ success: false, error: "Please enter a valid email address." });
+		return;
+	}
+
+	if (!SUPABASE_URL || !SUPABASE_KEY) {
+		console.error("[signup] Supabase not configured (SUPABASE_URL / SUPABASE_ANON_KEY)");
+		res.status(503).json({ success: false, error: "Signups are temporarily unavailable." });
+		return;
+	}
+
+	try {
+		const response = await fetch(`${SUPABASE_URL}/rest/v1/signups`, {
+			method: "POST",
+			headers: {
+				apikey: SUPABASE_KEY,
+				Authorization: `Bearer ${SUPABASE_KEY}`,
+				"Content-Type": "application/json",
+				// ignore-duplicates → re-submitting the same email is a no-op success.
+				Prefer: "return=minimal,resolution=ignore-duplicates",
+			},
+			body: JSON.stringify({ email, source }),
+		});
+
+		// 2xx = inserted or ignored; 409 = already exists → also success for the user.
+		if (response.ok || response.status === 409) {
+			res.status(200).json({ success: true });
+			return;
+		}
+
+		const text = await response.text().catch(() => "");
+		console.error("[signup] supabase error", response.status, text.slice(0, 300));
+		res.status(502).json({ success: false, error: "Could not save your email. Please try again." });
+	} catch (err) {
+		console.error("[signup] fetch failed:", err instanceof Error ? err.message : String(err));
+		res.status(502).json({ success: false, error: "Could not save your email. Please try again." });
+	}
+}

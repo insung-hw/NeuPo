@@ -102,7 +102,7 @@ export default function Header() {
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <div className="rounded-lg overflow-hidden" style={{ background: '#fff', padding: '3px' }}>
               <img
-                src="/assets/screenshot-2026-07-25T14-29-40.jpg"
+                src="/assets/logo.jpeg"
                 alt="NeuPo logo"
                 className="h-8 w-8 object-contain block"
               />

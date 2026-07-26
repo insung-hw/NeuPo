@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import DonutChart from './DonutChart';
+import { submitSignup } from '@/lib/api-client';
 
 const decorativeCharts = [
   { percent: 67, color: '#ffef63', size: 130, style: { top: 0, left: 0 } },
@@ -10,10 +11,21 @@ const decorativeCharts = [
 
 export default function HeroSection() {
   const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [error, setError] = useState('');
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    window.location.href = `/register?email=${encodeURIComponent(email)}`;
+    setStatus('loading');
+    setError('');
+    try {
+      await submitSignup(email, 'hero');
+      setStatus('success');
+      setEmail('');
+    } catch (err) {
+      setStatus('error');
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    }
   }
 
   return (
@@ -61,33 +73,44 @@ export default function HeroSection() {
               NeuPo tracks Social, Political, Economic, and Military objectives — with real US government data powering every metric.
             </p>
 
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mb-4 max-w-md">
-              <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
-                required
-                className="flex-1 px-4 py-3 rounded-md text-sm border focus:outline-none transition-colors"
-                style={{ background: '#022e28', borderColor: '#035048', color: '#f5f5f5' }}
-                onFocus={(e) => (e.target.style.borderColor = '#ffef63')}
-                onBlur={(e) => (e.target.style.borderColor = '#035048')}
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-md text-sm font-semibold whitespace-nowrap transition-all hover:opacity-90"
-                style={{ background: '#ffef63', color: '#013e37' }}
+            {status === 'success' ? (
+              <div
+                className="mb-4 max-w-md rounded-md px-4 py-3 text-sm"
+                style={{ background: '#ffef6315', border: '1px solid #ffef6350', color: '#ffef63' }}
               >
-                Continue with email
-              </button>
-            </form>
+                You're on the list! We'll be in touch soon.
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mb-2 max-w-md">
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  required
+                  disabled={status === 'loading'}
+                  className="flex-1 px-4 py-3 rounded-md text-sm border focus:outline-none transition-colors disabled:opacity-60"
+                  style={{ background: '#022e28', borderColor: '#035048', color: '#f5f5f5' }}
+                  onFocus={(e) => (e.target.style.borderColor = '#ffef63')}
+                  onBlur={(e) => (e.target.style.borderColor = '#035048')}
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="px-6 py-3 rounded-md text-sm font-semibold whitespace-nowrap transition-all hover:opacity-90 disabled:opacity-60"
+                  style={{ background: '#ffef63', color: '#013e37' }}
+                >
+                  {status === 'loading' ? 'Joining…' : 'Join the waitlist'}
+                </button>
+              </form>
+            )}
 
-            <p className="text-xs mb-1" style={{ color: '#a8c4c0' }}>
-              Don't have an account?{' '}
-              <a href="/register" style={{ color: '#ffef63' }} className="hover:underline">
-                Sign up
-              </a>
+            {status === 'error' && (
+              <p className="text-xs mb-1" style={{ color: '#fca5a5' }}>{error}</p>
+            )}
+            <p className="text-xs" style={{ color: '#a8c4c060' }}>
+              Get early access — enter your email to join the waitlist.
             </p>
             <p className="text-xs" style={{ color: '#a8c4c060' }}>
               By continuing, you agree to our{' '}
