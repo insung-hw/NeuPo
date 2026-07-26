@@ -1,128 +1,21 @@
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import { submitSignup } from '@/lib/api-client';
 
+const description = 'NeuPo tracks the legal, implementation, and litigation status of U.S. federal renewable-energy policy — every finding traced to official government sources.';
+const quickLinks = [{ label: 'Overview', path: '/' }, { label: 'Policies', path: '/policies' }, { label: 'Methodology', path: '/#methodology' }, { label: 'Sign Up', path: '/register' }];
+
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      await submitSignup(email, 'footer');
-      setSubmitted(true);
-      setEmail('');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const quickLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'Social', path: '/social' },
-    { label: 'Political', path: '/political' },
-    { label: 'Economic', path: '/economic' },
-    { label: 'Sign Up', path: '/register' },
-  ];
-
+  const [email, setEmail] = useState(''); const [submitted, setSubmitted] = useState(false); const [loading, setLoading] = useState(false); const [error, setError] = useState('');
+  async function handleSubmit(event: FormEvent) { event.preventDefault(); setLoading(true); setError(''); try { await submitSignup(email, 'footer'); setSubmitted(true); setEmail(''); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Something went wrong. Please try again.'); } finally { setLoading(false); } }
   return (
-    <footer style={{ background: '#022e28' }} className="border-t" >
-      <div className="container mx-auto px-4 py-12" style={{ borderColor: '#035048' }}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* Col 1 — Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="rounded-lg overflow-hidden" style={{ background: '#fff', padding: '3px' }}>
-                <img
-                  src="/assets/logo.jpeg"
-                  alt="NeuPo logo"
-                  className="h-7 w-7 object-contain block"
-                />
-              </div>
-              <span
-                className="text-xl font-bold"
-                style={{ color: '#ffef63', fontFamily: 'var(--font-heading)' }}
-              >
-                NeuPo
-              </span>
-            </div>
-            <p className="text-sm leading-relaxed" style={{ color: '#a8c4c0' }}>
-              National Strategy. Transparent Progress.
-            </p>
-            <p className="text-xs mt-4 leading-relaxed" style={{ color: '#a8c4c0' }}>
-              A civic intelligence platform tracking Social, Political, Economic, and Military objectives with real US government data.
-            </p>
-          </div>
-
-          {/* Col 2 — Quick Links */}
-          <div>
-            <h3 className="text-sm font-semibold mb-4 uppercase tracking-wider" style={{ color: '#f5f5f5' }}>Quick Links</h3>
-            <nav className="flex flex-col gap-2" aria-label="Footer links">
-              {quickLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="text-sm transition-colors"
-                  style={{ color: '#a8c4c0' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffef63')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#a8c4c0')}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          {/* Col 3 — Newsletter */}
-          <div>
-            <h3 className="text-sm font-semibold mb-4 uppercase tracking-wider" style={{ color: '#f5f5f5' }}>Stay Updated</h3>
-            <p className="text-sm mb-4" style={{ color: '#a8c4c0' }}>
-              Get the latest updates on national strategy progress and new data releases.
-            </p>
-            {submitted ? (
-              <p className="text-sm" style={{ color: '#ffef63' }}>Thanks! You're on the list.</p>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-                <input
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  required
-                  disabled={loading}
-                  className="w-full px-3 py-2 rounded-md text-sm border focus:outline-none transition-colors disabled:opacity-60"
-                  style={{ background: '#013e37', borderColor: '#035048', color: '#f5f5f5' }}
-                  onFocus={(e) => (e.target.style.borderColor = '#ffef63')}
-                  onBlur={(e) => (e.target.style.borderColor = '#035048')}
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full px-4 py-2 rounded-md text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60"
-                  style={{ background: '#ffef63', color: '#013e37' }}
-                >
-                  {loading ? 'Subscribing…' : 'Subscribe'}
-                </button>
-                {error && <span className="text-xs" style={{ color: '#fca5a5' }}>{error}</span>}
-              </form>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t text-center" style={{ borderColor: '#035048' }}>
-          <p className="text-xs" style={{ color: '#a8c4c0' }}>
-            © 2025 NeuPo. All rights reserved. Data sourced from US government public records.
-          </p>
-        </div>
+    <footer className="border-t border-[#035048] bg-[#022e28]">
+      <div className="container mx-auto grid grid-cols-1 gap-10 px-4 py-12 md:grid-cols-3">
+        <div><div className="flex items-center gap-2"><div className="overflow-hidden rounded-lg bg-white p-[3px]"><img src="/assets/logo.jpeg" alt="NeuPo logo" className="block h-7 w-7 object-contain" /></div><span className="text-xl font-bold text-[#ffef63]">NeuPo</span></div><p className="mt-4 text-sm leading-relaxed text-[#a8c4c0]">{description}</p></div>
+        <div><h2 className="text-sm font-semibold uppercase tracking-wider text-[#f5f5f5]">Quick Links</h2><nav className="mt-4 flex flex-col gap-2" aria-label="Footer links">{quickLinks.map((item) => <Link key={item.label} to={item.path} className="text-sm text-[#a8c4c0] hover:text-[#ffef63]">{item.label}</Link>)}</nav></div>
+        <div><h2 className="text-sm font-semibold uppercase tracking-wider text-[#f5f5f5]">Stay Updated</h2><p className="mt-4 text-sm text-[#a8c4c0]">Get updates when NeuPo publishes a new policy assessment or source review.</p>{submitted ? <p className="mt-4 text-sm text-[#ffef63]">Thanks! You're on the list.</p> : <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2"><label htmlFor="footer-email" className="sr-only">Email address</label><input id="footer-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email address" required disabled={loading} className="rounded-md border border-[#035048] bg-[#013e37] px-3 py-2 text-sm text-[#f5f5f5]" /><button type="submit" disabled={loading} className="rounded-md bg-[#ffef63] px-4 py-2 text-sm font-semibold text-[#013e37] disabled:opacity-60">{loading ? 'Subscribing…' : 'Subscribe'}</button>{error && <span className="text-xs text-[#fca5a5]">{error}</span>}</form>}</div>
       </div>
+      <div className="border-t border-[#035048] py-6 text-center text-xs text-[#a8c4c0]">© 2026 NeuPo. Research information, not legal advice.</div>
     </footer>
   );
 }

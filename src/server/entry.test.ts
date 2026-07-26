@@ -2,7 +2,7 @@ import express from "express";
 import type { Server } from "node:http";
 import { describe, expect, it } from "vitest";
 
-import { renderSsrDocument, registerAdSenseTextRoutes } from "./entry";
+import app, { renderSsrDocument, registerAdSenseTextRoutes } from "./entry";
 
 const publisherId = "ca-pub-1234567890123456";
 const canonicalScript = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}" crossorigin="anonymous"></script>`;
@@ -127,5 +127,21 @@ describe("entry SSR rendering", () => {
 		expect(html).toContain("<title>Generated Site</title>");
 		expect(html).not.toContain("pagead2.googlesyndication.com");
 		expect(html).toContain("<main>Rendered app</main>");
+	});
+});
+
+describe("entry sitemap identity", () => {
+	it("publishes canonical policy routes and excludes legacy sectors and redirects", async () => {
+		await withServer(app, async (baseUrl) => {
+			const response = await fetch(`${baseUrl}/sitemap.xml`, {
+				headers: { "X-Forwarded-Host": "neupo.app", "X-Forwarded-Proto": "https" },
+			});
+			const body = await response.text();
+
+			expect(response.status).toBe(200);
+			expect(body).toContain("https://neupo.app/");
+			expect(body).toContain("https://neupo.app/policies");
+			expect(body).not.toMatch(/\/(social|political|economic|military|energy)</);
+		});
 	});
 });
