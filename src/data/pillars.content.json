@@ -1,0 +1,385 @@
+{
+  "pillars": [
+    {
+      "slug": "social",
+      "label": "Social",
+      "description": "Tracking education, healthcare, housing, and community development programs across the nation.",
+      "objectives": [
+        {
+          "id": "s-obj-1",
+          "title": "Reduce Child Poverty Rate to 10%",
+          "agency": "Dept of Health & Human Services",
+          "status": "On Track",
+          "progress": 62,
+          "budget": "$4.2B",
+          "description": "Expand SNAP, EITC, and child tax credit programs to lift 3.5 million children out of poverty by 2026.",
+          "source": "HHS Strategic Plan 2022–2026",
+          "sourceUrl": "https://www.hhs.gov/about/strategic-plan/index.html",
+          "category": "Objectives"
+        },
+        {
+          "id": "s-obj-2",
+          "title": "Universal Pre-K Enrollment",
+          "agency": "Dept of Education",
+          "status": "Delayed",
+          "progress": 38,
+          "budget": "$2.8B",
+          "description": "Achieve 90% enrollment rate for 3–4 year olds in quality pre-kindergarten programs nationwide.",
+          "source": "ED Strategic Plan FY2022–2026",
+          "sourceUrl": "https://www.ed.gov/about/reports/strat/plan2022-26/index.html",
+          "category": "Objectives"
+        },
+        {
+          "id": "s-obj-3",
+          "title": "Reduce Veteran Homelessness by 25%",
+          "agency": "Dept of Veterans Affairs",
+          "status": "On Track",
+          "progress": 71,
+          "budget": "$1.1B",
+          "description": "Expand HUD-VASH vouchers and supportive services to permanently house 38,000 veterans.",
+          "source": "VA Annual Performance Report 2024",
+          "sourceUrl": "https://www.va.gov/performance/",
+          "category": "Objectives"
+        }
+      ],
+      "policies": [
+        {
+          "id": "s-pol-1",
+          "title": "Affordable Care Act Marketplace Expansion",
+          "agency": "Centers for Medicare & Medicaid Services",
+          "status": "Completed",
+          "progress": 100,
+          "budget": "$6.7B",
+          "description": "Enhanced premium tax credits extended through 2025, covering 21 million Americans on ACA marketplaces.",
+          "source": "CMS.gov / ARP Implementation",
+          "sourceUrl": "https://www.cms.gov/marketplace/about/arp",
+          "category": "Policies"
+        },
+        {
+          "id": "s-pol-2",
+          "title": "Student Loan Income-Driven Repayment (SAVE Plan)",
+          "agency": "Dept of Education",
+          "status": "At Risk",
+          "progress": 45,
+          "budget": "$475B (10-yr estimate)",
+          "description": "SAVE plan caps payments at 5% of discretionary income for undergraduate loans; currently under legal review.",
+          "source": "ED.gov / Federal Register",
+          "sourceUrl": "https://www.ed.gov/loans/income-driven-repayment",
+          "category": "Policies"
+        },
+        {
+          "id": "s-pol-3",
+          "title": "SNAP Modernization & Benefit Adequacy",
+          "agency": "USDA Food & Nutrition Service",
+          "status": "On Track",
+          "progress": 78,
+          "budget": "$113B annually",
+          "description": "Updated Thrifty Food Plan increases average SNAP benefit by 21%, reaching 42 million participants.",
+          "source": "USDA FNS Annual Report 2024",
+          "sourceUrl": "https://www.fns.usda.gov/snap/program-data",
+          "category": "Policies"
+        }
+      ],
+      "projects": [
+        {
+          "id": "s-proj-1",
+          "title": "Community Health Centers Expansion",
+          "agency": "Health Resources & Services Administration",
+          "status": "On Track",
+          "progress": 83,
+          "budget": "$5.8B",
+          "description": "Expanding 1,400 federally qualified health centers to serve an additional 6 million patients in underserved areas.",
+          "source": "HRSA.gov / USASpending.gov",
+          "sourceUrl": "https://www.hrsa.gov/grants/find-funding",
+          "category": "Projects"
+        },
+        {
+          "id": "s-proj-2",
+          "title": "National Affordable Housing Trust Fund",
+          "agency": "HUD",
+          "status": "Delayed",
+          "progress": 41,
+          "budget": "$3.5B",
+          "description": "Construction and rehabilitation of 60,000 affordable rental units for extremely low-income households.",
+          "source": "HUD.gov / National Housing Trust Fund",
+          "sourceUrl": "https://www.hudexchange.info/programs/nhtf/",
+          "category": "Projects"
+        },
+        {
+          "id": "s-proj-3",
+          "title": "Broadband Equity Access & Deployment (BEAD)",
+          "agency": "NTIA / Commerce",
+          "status": "On Track",
+          "progress": 56,
+          "budget": "$42.5B",
+          "description": "Deploy high-speed internet to every unserved and underserved location in the US by 2030.",
+          "source": "NTIA.gov / BroadbandUSA",
+          "sourceUrl": "https://broadbandusa.ntia.doc.gov/resources/federal/bead",
+          "category": "Projects"
+        },
+        {
+          "id": "s-proj-4",
+          "title": "Head Start Program Expansion",
+          "agency": "HHS Office of Head Start",
+          "status": "On Track",
+          "progress": 69,
+          "budget": "$12.3B annually",
+          "description": "Serving 833,000 children ages 0–5 with comprehensive early childhood education and family support services.",
+          "source": "HHS Head Start Annual Report 2024",
+          "sourceUrl": "https://eclkc.ohs.acf.hhs.gov/data-ongoing-monitoring",
+          "category": "Projects"
+        }
+      ]
+    },
+    {
+      "slug": "political",
+      "label": "Political",
+      "description": "Tracking government modernization, election security, federal transparency, and institutional reform initiatives.",
+      "objectives": [
+        {
+          "id": "p-obj-1",
+          "title": "Modernize Federal Procurement Systems",
+          "agency": "Office of Management & Budget",
+          "status": "On Track",
+          "progress": 58,
+          "budget": "$890M",
+          "description": "Streamline federal acquisition processes to reduce contract award timelines by 30% and increase small business participation.",
+          "source": "OMB M-21-26 / SAM.gov",
+          "sourceUrl": "https://sam.gov",
+          "category": "Objectives"
+        },
+        {
+          "id": "p-obj-2",
+          "title": "Strengthen Election Infrastructure Security",
+          "agency": "CISA / EAC",
+          "status": "On Track",
+          "progress": 74,
+          "budget": "$425M",
+          "description": "Harden election infrastructure against cyber threats in all 50 states through grants, audits, and technical assistance.",
+          "source": "CISA Election Security Program",
+          "sourceUrl": "https://www.cisa.gov/topics/election-security",
+          "category": "Objectives"
+        },
+        {
+          "id": "p-obj-3",
+          "title": "Federal Workforce Diversity & Inclusion Goals",
+          "agency": "Office of Personnel Management",
+          "status": "Delayed",
+          "progress": 44,
+          "budget": "$210M",
+          "description": "Achieve representative workforce demographics across all GS pay grades by 2027 per EO 14035.",
+          "source": "OPM DEIA Strategic Plan 2022–2026",
+          "sourceUrl": "https://www.opm.gov/policy-data-oversight/diversity-equity-inclusion-accessibility/",
+          "category": "Objectives"
+        }
+      ],
+      "policies": [
+        {
+          "id": "p-pol-1",
+          "title": "Bipartisan Infrastructure Law Implementation",
+          "agency": "White House Infrastructure Coordinator",
+          "status": "On Track",
+          "progress": 67,
+          "budget": "$1.2T (5-yr)",
+          "description": "Coordinating 375+ federal programs across 20 agencies to deliver roads, bridges, broadband, water, and transit investments.",
+          "source": "WhiteHouse.gov / BIL Tracker",
+          "sourceUrl": "https://www.whitehouse.gov/build/",
+          "category": "Policies"
+        },
+        {
+          "id": "p-pol-2",
+          "title": "FOIA Modernization & Transparency Initiative",
+          "agency": "DOJ Office of Information Policy",
+          "status": "On Track",
+          "progress": 61,
+          "budget": "$85M",
+          "description": "Reduce FOIA backlog by 50% and launch proactive disclosure portals across all major federal agencies.",
+          "source": "DOJ OIP Annual FOIA Report 2024",
+          "sourceUrl": "https://www.justice.gov/oip/reports",
+          "category": "Policies"
+        },
+        {
+          "id": "p-pol-3",
+          "title": "Lobbying Disclosure & Ethics Reform",
+          "agency": "Senate Office of Public Records",
+          "status": "Delayed",
+          "progress": 29,
+          "budget": "$12M",
+          "description": "Expand real-time lobbying disclosure requirements and close revolving-door loopholes for senior officials.",
+          "source": "Senate LDA Filings / OpenSecrets",
+          "sourceUrl": "https://lda.senate.gov/system/public/",
+          "category": "Policies"
+        }
+      ],
+      "projects": [
+        {
+          "id": "p-proj-1",
+          "title": "USASpending.gov Data Quality Improvement",
+          "agency": "Dept of the Treasury / OMB",
+          "status": "Completed",
+          "progress": 100,
+          "budget": "$45M",
+          "description": "Achieved 99.2% data accuracy across $6.8T in federal spending records, enabling real-time public transparency.",
+          "source": "USASpending.gov / DATA Act",
+          "sourceUrl": "https://www.usaspending.gov/",
+          "category": "Projects"
+        },
+        {
+          "id": "p-proj-2",
+          "title": "Federal Agency Performance.gov Refresh",
+          "agency": "OMB / GSA",
+          "status": "On Track",
+          "progress": 72,
+          "budget": "$28M",
+          "description": "Redesign Performance.gov to surface agency priority goals, progress indicators, and learning agendas in real time.",
+          "source": "Performance.gov / OMB Circular A-11",
+          "sourceUrl": "https://www.performance.gov/",
+          "category": "Projects"
+        },
+        {
+          "id": "p-proj-3",
+          "title": "State & Local Government Cybersecurity Grant Program",
+          "agency": "CISA / FEMA",
+          "status": "On Track",
+          "progress": 55,
+          "budget": "$1B (4-yr)",
+          "description": "Distributing $1B in cybersecurity grants to state, local, tribal, and territorial governments through 2025.",
+          "source": "CISA.gov / SLCGP",
+          "sourceUrl": "https://www.cisa.gov/state-and-local-cybersecurity-grant-program",
+          "category": "Projects"
+        }
+      ]
+    },
+    {
+      "slug": "economic",
+      "label": "Economic",
+      "description": "Measuring GDP growth, employment initiatives, trade policy, and infrastructure investment outcomes.",
+      "objectives": [
+        {
+          "id": "e-obj-1",
+          "title": "Achieve 4% Annual GDP Growth",
+          "agency": "Council of Economic Advisers",
+          "status": "On Track",
+          "progress": 67,
+          "budget": "N/A",
+          "description": "Sustain 4%+ real GDP growth through investment in clean energy, manufacturing, and workforce development.",
+          "source": "BEA.gov / CEA Economic Report 2024",
+          "sourceUrl": "https://www.bea.gov/",
+          "category": "Objectives"
+        },
+        {
+          "id": "e-obj-2",
+          "title": "Reduce Unemployment to 3.5%",
+          "agency": "Bureau of Labor Statistics",
+          "status": "Completed",
+          "progress": 100,
+          "budget": "N/A",
+          "description": "Unemployment reached 3.4% in January 2023 — lowest since 1969. Sustained below 4% through targeted workforce programs.",
+          "source": "BLS.gov / Current Population Survey",
+          "sourceUrl": "https://www.bls.gov/cps/",
+          "category": "Objectives"
+        },
+        {
+          "id": "e-obj-3",
+          "title": "Onshore 50 Critical Supply Chains",
+          "agency": "Dept of Commerce / USTR",
+          "status": "On Track",
+          "progress": 52,
+          "budget": "$52B (CHIPS Act)",
+          "description": "Rebuild domestic manufacturing capacity in semiconductors, pharmaceuticals, EVs, and critical minerals.",
+          "source": "Commerce.gov / CHIPS Program Office",
+          "sourceUrl": "https://www.nist.gov/chips",
+          "category": "Objectives"
+        }
+      ],
+      "policies": [
+        {
+          "id": "e-pol-1",
+          "title": "Inflation Reduction Act — Clean Energy Tax Credits",
+          "agency": "IRS / Dept of Energy",
+          "status": "On Track",
+          "progress": 71,
+          "budget": "$369B (10-yr)",
+          "description": "Production and investment tax credits driving $3T+ in private clean energy investment commitments through 2030.",
+          "source": "IRS.gov / DOE IRA Tracker",
+          "sourceUrl": "https://www.energy.gov/lpo/inflation-reduction-act",
+          "category": "Policies"
+        },
+        {
+          "id": "e-pol-2",
+          "title": "CHIPS & Science Act Semiconductor Investment",
+          "agency": "NIST / Dept of Commerce",
+          "status": "On Track",
+          "progress": 63,
+          "budget": "$52.7B",
+          "description": "Funding domestic semiconductor fabrication, R&D, and workforce development to reduce reliance on foreign chip supply.",
+          "source": "CHIPS.gov / NIST",
+          "sourceUrl": "https://www.chips.gov/",
+          "category": "Policies"
+        },
+        {
+          "id": "e-pol-3",
+          "title": "Small Business Administration Lending Expansion",
+          "agency": "SBA",
+          "status": "On Track",
+          "progress": 79,
+          "budget": "$43B (loan guarantees)",
+          "description": "SBA 7(a) and 504 loan programs approved $43B in small business financing in FY2024, a record high.",
+          "source": "SBA.gov / Annual Report FY2024",
+          "sourceUrl": "https://www.sba.gov/about-sba/sba-performance/sba-annual-reports",
+          "category": "Policies"
+        }
+      ],
+      "projects": [
+        {
+          "id": "e-proj-1",
+          "title": "National EV Charging Network",
+          "agency": "FHWA / Joint Office of Energy & Transportation",
+          "status": "On Track",
+          "progress": 48,
+          "budget": "$7.5B",
+          "description": "Deploy 500,000 EV chargers along US highways and in communities by 2030 under the BIL.",
+          "source": "FHWA.dot.gov / NEVI Program",
+          "sourceUrl": "https://www.fhwa.dot.gov/environment/alternative_fuel_corridors/nevi/",
+          "category": "Projects"
+        },
+        {
+          "id": "e-proj-2",
+          "title": "Appalachian Regional Commission Economic Development",
+          "agency": "ARC",
+          "status": "On Track",
+          "progress": 66,
+          "budget": "$1.5B (5-yr)",
+          "description": "Investing in workforce training, broadband, and business development across 423 Appalachian counties.",
+          "source": "ARC.gov / POWER Initiative",
+          "sourceUrl": "https://www.arc.gov/power-initiative/",
+          "category": "Projects"
+        },
+        {
+          "id": "e-proj-3",
+          "title": "Hydrogen Hub Development Program",
+          "agency": "Dept of Energy",
+          "status": "On Track",
+          "progress": 39,
+          "budget": "$8B",
+          "description": "Funding 7 regional clean hydrogen hubs to produce, store, and distribute clean hydrogen at scale.",
+          "source": "Energy.gov / H2Hubs",
+          "sourceUrl": "https://www.energy.gov/oced/regional-clean-hydrogen-hubs-0",
+          "category": "Projects"
+        },
+        {
+          "id": "e-proj-4",
+          "title": "Manufacturing USA Network Expansion",
+          "agency": "NIST / DoD / DOE",
+          "status": "On Track",
+          "progress": 74,
+          "budget": "$2.1B",
+          "description": "17 Manufacturing USA institutes advancing applied R&D in advanced manufacturing technologies.",
+          "source": "ManufacturingUSA.com / NIST",
+          "sourceUrl": "https://www.manufacturingusa.com/",
+          "category": "Projects"
+        }
+      ]
+    }
+  ]
+}
