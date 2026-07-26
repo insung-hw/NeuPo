@@ -1,0 +1,9 @@
+{
+  "areas": [
+    { "slug": "tax-incentives", "label": "Tax & Incentives", "description": "Federal clean-energy credits and location or sourcing bonuses.", "sort_order": 0, "source_values": ["Federal clean-energy tax credits", "Federal clean-energy tax-credit bonus"] },
+    { "slug": "grid-transmission", "label": "Grid & Transmission", "description": "Generator interconnection and long-term transmission planning reforms.", "sort_order": 1, "source_values": ["generator_interconnection", "regional_transmission_planning"] },
+    { "slug": "permitting-siting", "label": "Permitting & Siting", "description": "Federal environmental review, permitting, and siting policy.", "sort_order": 2, "source_values": ["permitting"] },
+    { "slug": "trade-supply-chain", "label": "Trade & Supply Chain", "description": "Trade remedies and supply conditions affecting renewable-energy deployment.", "sort_order": 3, "source_values": ["Solar trade remedies and project supply"] },
+    { "slug": "offshore-wind", "label": "Offshore Wind", "description": "Federal leasing and permitting policy specific to offshore wind.", "sort_order": 4, "source_values": ["offshore_wind"] }
+  ]
+}
