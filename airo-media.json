@@ -1,0 +1,41 @@
+{
+  "logo/horizontal": {
+    "mediaType": "logo",
+    "currentUrl": "/airo-assets/uploads/4dae68b9cd74608f596c446728c054f0.png",
+    "searchQuery": "Rebuild source logo (favicon)",
+    "alternatives": [],
+    "userModified": false,
+    "createdAt": "2026-07-25T09:46:57.506Z",
+    "lastUpdated": "2026-07-25T09:46:57.506Z"
+  },
+  "pages/home/hero": {
+    "mediaType": "image",
+    "currentUrl": "https://img1.wsimg.com/isteam/getty/2255697474",
+    "searchQuery": "aerial satellite view city infrastructure night dark green tinted",
+    "alternatives": [
+      "https://img1.wsimg.com/isteam/getty/2252785095",
+      "https://img1.wsimg.com/isteam/getty/1470588531",
+      "https://img1.wsimg.com/isteam/getty/959713416",
+      "https://img1.wsimg.com/isteam/getty/1455786914"
+    ],
+    "userModified": false,
+    "createdAt": "2026-07-25T09:47:55.932Z",
+    "lastUpdated": "2026-07-25T09:47:55.932Z",
+    "gettyId": "2255697474",
+    "alternativeGettyIds": [
+      "2252785095",
+      "1470588531",
+      "959713416",
+      "1455786914"
+    ],
+    "requestedSize": {
+      "width": 1920,
+      "height": 1080,
+      "fit": "cover"
+    },
+    "orientations": "horizontal",
+    "compositions": "wide_shot",
+    "moods": "dramatic,bold",
+    "minimumSize": "x_large"
+  }
+}
