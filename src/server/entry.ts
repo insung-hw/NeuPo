@@ -19,6 +19,14 @@ import {
 import { loadIndexNowKey } from "./indexnow-key";
 import { isSystemHost } from "./seo-host";
 import { llmsTxtHandler } from "./llms-txt";
+import { loadLocalEnv } from "./load-env";
+
+// Local runs of the production build (`node dist/server/entry.js`) pick up the
+// repo's .env; on Render there is no such file and the dashboard's real
+// environment variables already take precedence, so this is a no-op there.
+// Safe to call after the imports above: the repositories read process.env per
+// request, not at module evaluation.
+loadLocalEnv();
 
 export interface SsrRenderResult {
 	html: string;

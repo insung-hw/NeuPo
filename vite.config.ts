@@ -3,8 +3,16 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
+import { loadLocalEnv } from './src/server/load-env';
 
 const root = dirname(fileURLToPath(import.meta.url));
+
+// `npm run dev` serves the API routes and SSR in THIS process, and the data
+// repositories read SUPABASE_* from process.env. Vite's own env handling only
+// exposes VITE_-prefixed vars to the client bundle, so without this the local
+// .env is ignored and dev silently renders bundled fallback content against a
+// configured database. Loading here covers every dev path (page SSR and /api).
+loadLocalEnv(resolve(root, '.env'));
 
 /**
  * Development-only middleware that makes `npm run dev` behave like production:

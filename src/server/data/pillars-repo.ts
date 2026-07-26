@@ -18,9 +18,20 @@ import { getEnergyPillar } from './energy-repo';
 
 const mockPillars = (contentJson as { pillars: PillarContent[] }).pillars;
 
-const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/+$/, '');
-const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
-const isDbConfigured = Boolean(SUPABASE_URL && SUPABASE_KEY);
+/**
+ * Reads the Supabase config at call time, not at import time.
+ *
+ * Module-level constants would capture `process.env` during module evaluation,
+ * which for the API handlers happens before `src/server/entry.ts` runs a single
+ * line of its own body — so a `.env` loaded there would arrive too late and the
+ * site would quietly serve fallback content against a perfectly good database.
+ * Reading per call costs nothing and removes that ordering trap entirely.
+ */
+function supabaseConfig(): { url: string; key: string } | null {
+  const url = process.env.SUPABASE_URL?.replace(/\/+$/, '');
+  const key = process.env.SUPABASE_ANON_KEY;
+  return url && key ? { url, key } : null;
+}
 
 const CACHE_TTL_MS = 60_000;
 let cache: { at: number; data: PillarContent[] } | null = null;
@@ -61,18 +72,18 @@ function rowToProject(row: ProjectRow): Project {
   };
 }
 
-async function fetchFromSupabase(): Promise<PillarContent[]> {
+async function fetchFromSupabase(config: { url: string; key: string }): Promise<PillarContent[]> {
   const headers = {
-    apikey: SUPABASE_KEY as string,
-    Authorization: `Bearer ${SUPABASE_KEY}`,
+    apikey: config.key,
+    Authorization: `Bearer ${config.key}`,
   };
 
   const [pillarsRes, projectsRes] = await Promise.all([
-    fetch(`${SUPABASE_URL}/rest/v1/pillars?select=slug,label,description&order=sort_order`, {
+    fetch(`${config.url}/rest/v1/pillars?select=slug,label,description&order=sort_order`, {
       headers,
     }),
     fetch(
-      `${SUPABASE_URL}/rest/v1/projects?select=id,pillar_slug,category,title,agency,status,progress,budget,description,source,source_url&order=sort_order`,
+      `${config.url}/rest/v1/projects?select=id,pillar_slug,category,title,agency,status,progress,budget,description,source,source_url&order=sort_order`,
       { headers },
     ),
   ]);
@@ -108,12 +119,13 @@ async function fetchFromSupabase(): Promise<PillarContent[]> {
  * source-traced data (as the energy pillar already is) is the open work item.
  */
 async function getLegacyPillars(): Promise<PillarContent[]> {
-  if (!isDbConfigured) return mockPillars;
+  const config = supabaseConfig();
+  if (!config) return mockPillars;
 
   if (cache && Date.now() - cache.at < CACHE_TTL_MS) return cache.data;
 
   try {
-    const data = await fetchFromSupabase();
+    const data = await fetchFromSupabase(config);
     // A configured-but-empty DB (e.g. schema created, seed not run yet) should
     // not blank the site — fall back to mock content in that case.
     if (data.length === 0) return mockPillars;

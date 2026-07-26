@@ -25,18 +25,21 @@ import {
   type EnergyStatusAssessment,
 } from '../../data/energy';
 
-const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/+$/, '');
-const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
-const isDbConfigured = Boolean(SUPABASE_URL && SUPABASE_KEY);
+/** Read at call time, not at import time — see the note in pillars-repo.ts. */
+function supabaseConfig(): { url: string; key: string } | null {
+  const url = process.env.SUPABASE_URL?.replace(/\/+$/, '');
+  const key = process.env.SUPABASE_ANON_KEY;
+  return url && key ? { url, key } : null;
+}
 
 const CACHE_TTL_MS = 60_000;
 let cache: { at: number; data: PillarContent } | null = null;
 
-async function selectAll<T>(path: string): Promise<T[]> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+async function selectAll<T>(config: { url: string; key: string }, path: string): Promise<T[]> {
+  const res = await fetch(`${config.url}/rest/v1/${path}`, {
     headers: {
-      apikey: SUPABASE_KEY as string,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
+      apikey: config.key,
+      Authorization: `Bearer ${config.key}`,
     },
   });
   if (!res.ok) {
@@ -45,12 +48,15 @@ async function selectAll<T>(path: string): Promise<T[]> {
   return (await res.json()) as T[];
 }
 
-async function fetchFromSupabase(): Promise<EnergyDataset> {
+async function fetchFromSupabase(config: { url: string; key: string }): Promise<EnergyDataset> {
   const [policies, documents, links, assessments] = await Promise.all([
-    selectAll<EnergyPolicy>('policies?select=*&pillar_slug=eq.energy&order=sort_order'),
-    selectAll<EnergyDocument>('policy_documents?select=*&order=document_id'),
-    selectAll<EnergyPolicyDocumentLink>('policy_document_links?select=*&order=link_id'),
-    selectAll<EnergyStatusAssessment>('policy_status_assessments?select=*&order=assessment_id'),
+    selectAll<EnergyPolicy>(config, 'policies?select=*&pillar_slug=eq.energy&order=sort_order'),
+    selectAll<EnergyDocument>(config, 'policy_documents?select=*&order=document_id'),
+    selectAll<EnergyPolicyDocumentLink>(config, 'policy_document_links?select=*&order=link_id'),
+    selectAll<EnergyStatusAssessment>(
+      config,
+      'policy_status_assessments?select=*&order=assessment_id',
+    ),
   ]);
 
   return {
@@ -69,12 +75,13 @@ async function fetchFromSupabase(): Promise<EnergyDataset> {
  * Never throws — falls back to the bundled dataset.
  */
 export async function getEnergyPillar(): Promise<PillarContent> {
-  if (!isDbConfigured) return toPillarContent(energyDataset);
+  const config = supabaseConfig();
+  if (!config) return toPillarContent(energyDataset);
 
   if (cache && Date.now() - cache.at < CACHE_TTL_MS) return cache.data;
 
   try {
-    const dataset = await fetchFromSupabase();
+    const dataset = await fetchFromSupabase(config);
     // A configured-but-unseeded DB (schema.energy.sql run, seed not yet) must
     // not blank the pillar — fall back to the bundled dataset in that case.
     if (dataset.policies.length === 0) return toPillarContent(energyDataset);

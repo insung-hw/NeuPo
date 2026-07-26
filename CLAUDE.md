@@ -191,6 +191,14 @@ GoDaddy 전용 경로는 Render에 없어서 깨짐** — `public/`에 실제 �
 - 서버 전용: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (process.env로 읽음).
 - 클라이언트 노출이 필요하면 `VITE_` 접두사 필요 (예: 향후 Supabase Auth).
 - 로컬은 `.env` (git 무시됨), 프로덕션은 Render 대시보드 Environment.
+- **`.env` 로딩은 `src/server/load-env.ts`가 담당** (Node 내장 `process.loadEnvFile`, dotenv 의존성 없음).
+  두 군데서 호출됩니다: `vite.config.ts` 상단(dev 서버 프로세스 전체), `src/server/entry.ts`
+  상단(로컬에서 프로덕션 빌드 실행 시). Render에는 `.env`가 없어 ENOENT로 조용히 무시됩니다.
+- **이미 설정된 환경변수가 파일보다 우선**합니다(Node 기본 동작). Render 대시보드 값이
+  로컬 파일에 덮이지 않습니다.
+- **`.env`를 BOM(UTF-8 서명) 있게 저장하지 말 것.** 첫 줄 변수명이 `﻿SUPABASE_URL`이 돼서
+  파서가 못 읽고, 사이트는 에러 없이 조용히 폴백 콘텐츠를 띄웁니다 — DB가 멀쩡한데도.
+  (실제로 한 번 겪은 문제입니다.) VS Code라면 "UTF-8 with BOM" 대신 "UTF-8"로 저장.
 
 ---
 
