@@ -30,18 +30,15 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background image */}
+      {/* Background — clean brand gradient with a soft accent glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <img
-          src="/airo-assets/images/pages/home/hero"
-          alt=""
-          className="w-full h-full object-cover"
-          loading="eager"
-          fetchPriority="high"
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(135deg, #024039 0%, #013e37 45%, #022a25 100%)' }}
         />
         <div
           className="absolute inset-0"
-          style={{ background: 'linear-gradient(135deg, rgba(1,62,55,0.97) 0%, rgba(1,50,44,0.90) 60%, rgba(1,62,55,0.80) 100%)' }}
+          style={{ background: 'radial-gradient(60% 60% at 78% 28%, rgba(255,239,99,0.10) 0%, transparent 70%)' }}
         />
       </div>
 
