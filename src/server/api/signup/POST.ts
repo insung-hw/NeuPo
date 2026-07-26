@@ -39,8 +39,13 @@ export default async function handler(req: Request, res: Response): Promise<void
 				apikey: config.key,
 				Authorization: `Bearer ${config.key}`,
 				"Content-Type": "application/json",
-				// ignore-duplicates → re-submitting the same email is a no-op success.
-				Prefer: "return=minimal,resolution=ignore-duplicates",
+				// Plain insert only. `resolution=ignore-duplicates` makes PostgREST
+				// build an ON CONFLICT statement, and Postgres then also evaluates
+				// the table's SELECT policy — which signups deliberately does not
+				// have, so every request failed the RLS check (42501) even though
+				// the anon INSERT policy was correct. A duplicate now comes back as
+				// 409 instead, which the caller below already treats as success.
+				Prefer: "return=minimal",
 			},
 			body: JSON.stringify({ email, source }),
 		});
