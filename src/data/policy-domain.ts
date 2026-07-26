@@ -237,6 +237,12 @@ export function validatePolicyDataset(dataset: PolicyDataset): void {
     if (!policyAreaBySlug.has(policy.policy_area_slug as PolicyAreaSlug)) {
       throw new Error(`Unknown policy area slug for ${policy.policy_id}: ${policy.policy_area_slug}`);
     }
+    const sourceAreaSlug = policyAreaForSourceValue(policy.source_policy_area);
+    if (sourceAreaSlug !== policy.policy_area_slug) {
+      throw new Error(
+        `${policy.policy_id} policy area slug ${policy.policy_area_slug} does not match source policy area ${policy.source_policy_area}`,
+      );
+    }
     const types = new Set(dataset.assessments.filter((row) => row.policy_id === policy.policy_id).map((row) => row.assessment_type));
     for (const required of ['legal_status', 'implementation_status', 'litigation_status']) {
       if (!types.has(required)) throw new Error(`${policy.policy_id} is missing ${required}`);

@@ -72,6 +72,22 @@ describe('policy domain', () => {
     expect(() => validatePolicyDataset(invalid)).toThrow(/litigation_status/);
   });
 
+  it('rejects an unknown workbook policy-area classification', () => {
+    const invalid = {
+      ...dataset,
+      policies: [{ ...dataset.policies[0], source_policy_area: 'unmapped value' }],
+    };
+    expect(() => validatePolicyDataset(invalid)).toThrow(/Unknown policy area/);
+  });
+
+  it('rejects a workbook classification paired with the wrong canonical area', () => {
+    const invalid = {
+      ...dataset,
+      policies: [{ ...dataset.policies[0], source_policy_area: 'permitting' }],
+    };
+    expect(() => validatePolicyDataset(invalid)).toThrow(/does not match source policy area/);
+  });
+
   it('filters and summarizes raw status values', () => {
     const records = buildPolicyCatalog(dataset).policies;
     expect(filterPolicies(records, { areaSlug: 'tax-incentives', legalStatus: 'all', implementationStatus: 'all', litigationStatus: 'all' })).toHaveLength(1);
