@@ -1,13 +1,9 @@
 import { lazy, Suspense } from 'react';
-import {
-  Outlet,
-  RouterProvider,
-  createBrowserRouter,
-  type RouteObject,
-} from 'react-router-dom';
+import { Outlet, RouterProvider, createBrowserRouter, type RouteObject } from 'react-router-dom';
 
 import AiroErrorBoundary from '../dev-tools/src/AiroErrorBoundary';
 import CookieBannerErrorBoundary from '@/components/CookieBannerErrorBoundary';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 import RootLayout from './layouts/RootLayout';
 import Spinner from './components/Spinner';
 import { routes } from './routes';
@@ -68,14 +64,14 @@ declare global {
 }
 
 const router = createBrowserRouter(routeTree, {
-  hydrationData:
-    typeof window !== 'undefined' ? window.__staticRouterHydrationData : undefined,
+  hydrationData: typeof window !== 'undefined' ? window.__staticRouterHydrationData : undefined,
 });
 
 export default function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <GoogleAnalytics />
       {/*
         CookieBanner reads document.cookie and subscribes to browser events.
         App.tsx is client-only (entry-server.tsx renders the route tree
