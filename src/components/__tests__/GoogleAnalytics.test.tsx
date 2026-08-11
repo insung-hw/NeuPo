@@ -11,7 +11,7 @@ const MEASUREMENT_ID = "G-SYBQXS6TZK";
 const SCRIPT_ID = "ga4-script";
 
 type AnalyticsWindow = typeof globalThis & {
-  dataLayer?: unknown[][];
+  dataLayer?: IArguments[];
   gtag?: (...args: unknown[]) => void;
 } & Partial<Record<`ga-disable-${string}`, boolean>>;
 
@@ -56,10 +56,22 @@ describe("GoogleAnalytics", () => {
       "src",
       `https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`,
     );
-    expect((window as AnalyticsWindow).dataLayer).toContainEqual([
-      "config",
-      MEASUREMENT_ID,
-    ]);
+    const commands = (window as AnalyticsWindow).dataLayer!;
+    expect(Array.from(commands[1])).toEqual(["config", MEASUREMENT_ID]);
+  });
+
+  it("queues commands in the Google tag arguments format", () => {
+    localStorage.setItem(
+      CONSENT_KEY,
+      JSON.stringify({ analytics: true, timestamp: Date.now() }),
+    );
+
+    render(<GoogleAnalytics />);
+
+    const commands = (window as AnalyticsWindow).dataLayer!;
+    expect(Object.prototype.toString.call(commands[0])).toBe(
+      "[object Arguments]",
+    );
   });
 
   it("loads GA4 once when consent is granted during the session", () => {

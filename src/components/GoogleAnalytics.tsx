@@ -6,7 +6,7 @@ const MEASUREMENT_ID = "G-SYBQXS6TZK";
 const SCRIPT_ID = "ga4-script";
 
 type AnalyticsWindow = typeof globalThis & {
-  dataLayer?: unknown[][];
+  dataLayer?: IArguments[];
   gtag?: (...args: unknown[]) => void;
 } & Partial<Record<`ga-disable-${string}`, boolean>>;
 
@@ -17,8 +17,8 @@ function enableGoogleAnalytics(): void {
   if (document.getElementById(SCRIPT_ID)) return;
 
   analyticsWindow.dataLayer = analyticsWindow.dataLayer ?? [];
-  analyticsWindow.gtag = (...args: unknown[]) => {
-    analyticsWindow.dataLayer!.push(args);
+  analyticsWindow.gtag = function gtag(): void {
+    analyticsWindow.dataLayer!.push(arguments);
   };
   analyticsWindow.gtag("js", new Date());
   analyticsWindow.gtag("config", MEASUREMENT_ID);
